@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}Главная страница{% endblock %}
+
+{% block content %}
+{% for movie in movies %}
+    <h3>
+        <a href="{% url 'movie_detail' movie.slug  %}">
+            {{ movie.title }}
+        </a>
+    </h3>
+    <p>{{ movie.genre }}</p>
+    <span>{{ movie.rating|default:"Оценка еще не поставлена" }}</span>
+{% endfor %}
+{% endblock %}

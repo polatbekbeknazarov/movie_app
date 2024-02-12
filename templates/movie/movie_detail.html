@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ movie.title }}{% endblock %}
+
+{% block content %}
+<h2>{{ movie.title }}</h2>
+<p>Жанр: {{ movie.genre.name }}</p>
+<p>Дата выпуска: {{ movie.release_date }}</p>
+<p>Режиссер: <a href="">{{ movie.director.name }}</a></p>
+<p>
+    Актеры: 
+    {% for actor in movie.actors.all %}
+    <a href="{% url 'actor_detail' actor.id %}">
+        {{ actor.name }}
+    </a>
+    {% if not forloop.last %}, {% endif %}
+    {% endfor %}
+</p>
+<p>Описание: {{ movie.description }}</p>
+<p>Оценка: {{ movie.rating|default:"Пока оценок нет" }}</p>
+{% endblock %}
