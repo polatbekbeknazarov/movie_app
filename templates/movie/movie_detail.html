@@ -3,14 +3,15 @@
 {% block title %}{{ movie.title }}{% endblock %}
 
 {% block content %}
+<img style="width: 350px; height: 200px;" src="{{ movie.image.url }}" alt="">
 <h2>{{ movie.title }}</h2>
 <p>Жанр: {{ movie.genre.name }}</p>
 <p>Дата выпуска: {{ movie.release_date }}</p>
-<p>Режиссер: <a href="">{{ movie.director.name }}</a></p>
+<p>Режиссер: <a href="{% url 'director_detail' movie.director.slug %}">{{ movie.director.name }}</a></p>
 <p>
     Актеры: 
     {% for actor in movie.actors.all %}
-    <a href="{% url 'actor_detail' actor.id %}">
+    <a href="{% url 'actor_detail' actor.slug %}">
         {{ actor.name }}
     </a>
     {% if not forloop.last %}, {% endif %}

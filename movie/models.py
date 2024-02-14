@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 
 class Genre(models.Model):
     name = models.CharField(max_length=255)
+    slug = models.SlugField(null=True, default=None)
 
     def __str__(self):
         return self.name
@@ -14,6 +15,7 @@ class Director(models.Model):
     date_of_birth = models.DateField(null=True, default=None)
     image = models.ImageField(upload_to='uploads/director/', null=True, default=None)
     bio = models.TextField()
+    slug=models.SlugField(null=True, default=None)
 
     def __str__(self):
         return self.name
@@ -24,6 +26,7 @@ class Actor(models.Model):
     date_of_birth = models.DateField(null=True, default=None)
     image = models.ImageField(upload_to='uploads/actor', null=True, default=None)
     bio = models.TextField()
+    slug=models.SlugField(null=True, default=None)
 
     def __str__(self):
         return self.name
@@ -40,7 +43,7 @@ class Rating(models.Model):
 
 class Movie(models.Model):
     title = models.CharField(max_length=255)
-    genre = models.ForeignKey('Genre',on_delete=models.CASCADE)
+    genre = models.ForeignKey('Genre', on_delete=models.CASCADE)
     release_date = models.DateField()
     director = models.ForeignKey('Director', on_delete=models.CASCADE)
     actors = models.ManyToManyField('Actor')

@@ -3,7 +3,18 @@
 {% block title %}Главная страница{% endblock %}
 
 {% block content %}
+<form method="get" action="{% url 'movie_list' %}" style="margin-bottom: 50px;">
+    <label for="genre">Select a category:</label>
+    <select name="genre" id="genre">
+      <option value="" selected>All Categories</option>
+      {% for genre in genres %}
+        <option value="{{ genre.slug }}">{{ genre.name }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit">Filter</button>
+</form>
 {% for movie in movies %}
+    <img style="width: 350px; height: 200px;" src="{{ movie.image.url }}" alt="">
     <h3>
         <a href="{% url 'movie_detail' movie.slug  %}">
             {{ movie.title }}
