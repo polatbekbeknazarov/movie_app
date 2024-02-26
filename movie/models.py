@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.validators import FileExtensionValidator
 
 
 class Genre(models.Model):
@@ -49,6 +50,7 @@ class Movie(models.Model):
     actors = models.ManyToManyField('Actor')
     image = models.ImageField(upload_to='uploads/movie/', null=True, default=None)
     description = models.TextField()
+    video = models.FileField(upload_to='uploads/video', null=True, default=None, validators=[FileExtensionValidator(allowed_extensions=['mp4'])])
     rating = models.FloatField(null=True, blank=True)
     slug = models.SlugField(null=True, default=None)
 

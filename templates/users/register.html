@@ -3,8 +3,10 @@
 {% block title %}Регистрация{% endblock %}
 
 {% block content %}
-<form action="">
+<form action="{% url "register" %}" method='post'>
     {% csrf_token %}
     {{form.as_p}}
+
+    <button type='submit'>Зарегестрироваться</button>
 </form>
 {% endblock %}

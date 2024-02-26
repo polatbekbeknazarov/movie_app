@@ -18,5 +18,32 @@
     {% endfor %}
 </p>
 <p>Описание: {{ movie.description }}</p>
+<video width="400" controls="controls">
+    <source src="{{ movie.video.url }}" type="video/mp4">
+</video>
 <p>Оценка: {{ movie.rating|default:"Пока оценок нет" }}</p>
+
+{% if messages %}
+<ul> 
+    {% for message in  messages%}
+    <li>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+
+{% if request.user.is_authenticated %}
+    <form method='post' action='{% url "rate_movie" movie.slug %}'>
+        {% csrf_token %}
+
+        <label for='rating'>Rate the movie (1-5):</label>
+        <select name='rating' id='rating'>
+            {% for i in '12345'|make_list %}
+                <option value='{{ i }}'>{{ i }}</option>
+            {% endfor %}
+        </select>
+        <button type='submit'>Submit Rating</button>
+    </form>
+{% endif %}
+
 {% endblock %}
