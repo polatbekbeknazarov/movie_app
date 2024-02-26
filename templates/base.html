@@ -11,7 +11,27 @@
 
 <body>
     <header>
-
+        {% if request.user.is_authenticated %}
+        <ul>
+            <li>
+                {{ request.user.username }}
+            </li>
+            |
+            <li>
+                <a href="{% url "logout" %}">Выйти</a>
+            </li>
+        </ul>
+        {% else %}
+        <ul>
+            <li>
+                <a href="{% url "register" %}">Зарегестрироваться</a>
+            </li>
+            |
+            <li>
+                <a href="{% url "login" %}">Войти</a>
+            </li>
+        </ul>
+        {% endif %}
     </header>
     <main>
         {% block content %}
