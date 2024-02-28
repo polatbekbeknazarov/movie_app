@@ -43,18 +43,36 @@ class Rating(models.Model):
 
 
 class Movie(models.Model):
-    title = models.CharField(max_length=255)
-    genre = models.ForeignKey('Genre', on_delete=models.CASCADE)
-    release_date = models.DateField()
-    director = models.ForeignKey('Director', on_delete=models.CASCADE)
-    actors = models.ManyToManyField('Actor')
-    image = models.ImageField(upload_to='uploads/movie/', null=True, default=None)
-    description = models.TextField()
-    video = models.FileField(upload_to='uploads/video', null=True, default=None, validators=[FileExtensionValidator(allowed_extensions=['mp4'])])
-    rating = models.FloatField(null=True, blank=True)
+    title = models.CharField(max_length=255, verbose_name='Название')
+    genre = models.ForeignKey('Genre', on_delete=models.CASCADE, verbose_name='Жанр')
+    release_date = models.DateField(verbose_name='Дата релиза')
+    director = models.ForeignKey('Director', on_delete=models.CASCADE, verbose_name='Режиссер')
+    actors = models.ManyToManyField('Actor', verbose_name='Актеры')
+    image = models.ImageField(upload_to='uploads/movie/', null=True, default=None, verbose_name='Изображение')
+    description = models.TextField(verbose_name='Описание')
+    video = models.FileField(upload_to='uploads/video', 
+                             null=True, default=None, 
+                             validators=[FileExtensionValidator(allowed_extensions=['mp4'])],
+                             verbose_name='Видео'
+                             )
+    rating = models.FloatField(null=True, blank=True, verbose_name='Оценки')
     slug = models.SlugField(null=True, default=None)
+
+    class Meta:
+        verbose_name = 'Фильм'
+        verbose_name_plural = 'Фильмы'
 
     def __str__(self):
         return self.title
 
-    
+
+class WishList(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+
+
+class MovieComment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    content = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)

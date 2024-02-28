@@ -22,11 +22,15 @@
     <source src="{{ movie.video.url }}" type="video/mp4">
 </video>
 <p>Оценка: {{ movie.rating|default:"Пока оценок нет" }}</p>
+<form action="{% url "add_to_list" movie.slug %}" method='POST'>
+    {% csrf_token %}
+    <button type='submit'>Добавить</button>
+</form>
 
 {% if messages %}
 <ul> 
     {% for message in  messages%}
-    <li>{{ message }}</li>
+        <li>{{ message }}</li>
     {% endfor %}
 </ul>
 {% endif %}
@@ -45,5 +49,21 @@
         <button type='submit'>Submit Rating</button>
     </form>
 {% endif %}
+
+
+{% if request.user.is_authenticated %}
+    <form method="post" action=".">
+        {% csrf_token %}
+        {{ form }}
+        <button type="submit">Отправить</button>
+    </form>
+{% else %}
+<a href="{% url 'login' %}">Авторизуйтесь, чтобы написать комментарий</a>
+{% endif %}
+
+{% for comment in comments %}
+<p>{{ comment.user }}</p> | <span>{{ comment.created_at }}</span>
+<p>{{ comment.content }}</p>
+{% endfor %}
 
 {% endblock %}

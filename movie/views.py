@@ -1,9 +1,10 @@
 from django.shortcuts import render, get_object_or_404,redirect
-from .models import Movie, Actor, Director, Genre, Rating
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.db.models import Avg
+from django.db.models import Avg, Q
 
+from movie.models import Movie, Actor, Director, Genre, Rating, WishList, MovieComment
+from .forms import CommentForm
 
 
 def movie_list(request, genre_slug=None):
@@ -17,6 +18,14 @@ def movie_list(request, genre_slug=None):
     else:
         movies = Movie.objects.all()
 
+    if request.POST.get('q'):
+        query = request.POST.get('q', '')
+
+        movies = Movie.objects.filter(
+            Q(title__icontains=query) |
+            Q(description__icontains=query)
+        )
+
     context = {
         'movies': movies,
         'genres': genres,
@@ -27,9 +36,27 @@ def movie_list(request, genre_slug=None):
 
 def movie_detail(request, movie_slug):
     movie = get_object_or_404(Movie, slug=movie_slug)
+    comments = MovieComment.objects.all()
+
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+
+        if form.is_valid():
+            new_comment = form.save(commit=False)
+            new_comment.user = request.user
+            new_comment.movie = movie
+
+            new_comment.save()
+
+            return redirect('movie_detail', movie_slug)
+    else:
+        form = CommentForm
+
 
     context = {
-        'movie': movie
+        'movie': movie,
+        'form': form,
+        'comments': comments,
     }
 
     return render(request, 'movie/movie_detail.html', context)
@@ -46,6 +73,7 @@ def actor_detail(request, actor_slug=None, director_slug=None):
     }
 
     return render(request, 'movie/staff_detail.html', context)
+
 
 @login_required
 def rate_movie(request, movie_slug):
@@ -71,3 +99,16 @@ def rate_movie(request, movie_slug):
         return redirect('movie_detail', movie_slug=movie_slug)
     
     return redirect('movie_list')
+
+
+@login_required
+def add_to_list(request, movie_slug):
+    movie = get_object_or_404(Movie, slug=movie_slug)
+
+    # get_object_or_create архалы жазып озгерт. 
+    WishList.objects.create(user=request.user, movie=movie)
+
+    return redirect('movie_detail', movie_slug)
+
+
+

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Director, Actor, Rating, Movie, Genre
+from movie.models import Director, Actor, Rating, Movie, Genre, WishList, MovieComment
 
 @admin.register(Director)
 class DirectorAdmin(admin.ModelAdmin):
@@ -28,3 +28,13 @@ class RatingAdmin(admin.ModelAdmin):
 class MovieAdmin(admin.ModelAdmin):
     list_display = ('id', 'title', 'genre', 'release_date', 'director', 'rating',)
     prepopulated_fields = {'slug': ('title',)}
+
+
+@admin.register(WishList)
+class WishListAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'movie',)
+
+
+@admin.register(MovieComment)
+class MovieCommentAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'created_at',)

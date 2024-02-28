@@ -1,0 +1,5 @@
+<form action="{% url "movie_list" %}" method="post">
+    {% csrf_token %}
+    <input type="search" placeholder="Search..." name="q">
+    <button type="submit">Search</button>
+</form>
